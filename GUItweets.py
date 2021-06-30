@@ -152,7 +152,7 @@ class MainWindow(Screen):
                 indiv_op = Button(text=item.replace("\n", " ") + "\n " + self.tweet_sen[pos] + "\n" + self.links[pos],
                                   size_hint=(None, None),
                                   size=(1500, 120), background_color=(23 / 205.0, 180 / 200, 1.5, 0.3),
-                                  font_name="/home/abdullah/PycharmProjects/corsera/arial.ttf")
+                                  font_name="arial.ttf")
 
                 indiv_op.bind(on_press=lambda indiv_op: self.dropdownlist.select(indiv_op.text))
                 self.dropdownlist.add_widget(indiv_op)
