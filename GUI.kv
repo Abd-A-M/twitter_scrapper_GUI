@@ -1,0 +1,55 @@
+<MyTile@SmartTileWithStar>
+<MutableRstDocumentTextInput@MutableTextInput>
+    size_hint_y: None
+    height: "234dp"
+WindowManager:
+    MainWindow:
+<MainWindow>:
+    name: "main"
+    canvas.before:
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            source: 'twit.png'
+    GridLayout:
+        pos:1,750
+        size: 1500,50
+        size_hint: None, None
+        cols: 4
+        rows:1
+        spacing: 2
+        Button:
+            bold:True
+            size:375,50
+            size_hint:None,None
+            background_color: 200,110,23 , 0.15
+            text:"Search"
+            id:search
+            on_press:
+                root.reset()
+                root.drop_menu()
+        TextInput:
+            background_color: 200,110,23,0.3
+            markup:True
+            size:500,50
+            size_hint:None,None
+            id:input
+            font_name:"/home/abdullah/PycharmProjects/corsera/arial.ttf"
+            text:""
+            hint_text:"Enter Search Term Here To Discover"
+        TextInput:
+            id: label
+            disabled:True
+            size:250,50
+            size_hint:None,None
+            text:"Overall sentiment"
+            background_color: 200,110,23,0.3
+        Button:
+            text:'Reset'
+            size:370,50
+            size_hint:None,None
+            bold:True
+            background_color: 200,110,23 , 0.15
+            id:reset
+            on_press:root.reset()
+
