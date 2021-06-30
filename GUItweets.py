@@ -99,6 +99,7 @@ class MainWindow(Screen):
                 return False
         except:
             pass
+
     def sentimentformat(self, sentimentformat):
         sentiment = sentimentformat
         if sentiment > .5:
@@ -119,7 +120,7 @@ class MainWindow(Screen):
 
     def open_link(self, link):
         splited = link.split("\n")
-        webbrowser.open(splited[-1])
+        webbrowser.open(splited[-2])
         self.reset()
 
     def drop_menu(self):
@@ -128,7 +129,7 @@ class MainWindow(Screen):
             self.dropdownlist = DropDown(size_hint=(None, None), size=(1500, 751), pos=(0, 0))
             for item in self.tweets:
                 pos = self.tweets.index(item)
-                indiv_op = Button(text=item.replace("\n", " ") + "\n " + self.tweet_sen[pos] + "\n" + self.links[pos],
+                indiv_op = Button(text=item.replace("\n", " ") + "\n " + self.links[pos] + "\n" + self.tweet_sen[pos],
                                   size_hint=(None, None),
                                   size=(1500, 120), background_color=(23 / 205.0, 180 / 200, 1.5, 0.3))
 
@@ -149,10 +150,11 @@ class MainWindow(Screen):
                 item = arabic_reshaper.reshape(item)
                 item = bidi.algorithm.get_display(item)
 
-                indiv_op = Button(text=item.replace("\n", " ") + "\n " + self.tweet_sen[pos] + "\n" + self.links[pos],
+                indiv_op = Button(text=item.replace("\n", " ") + "\n " +self.links[pos]+"\n"+ self.tweet_sen[pos] ,
                                   size_hint=(None, None),
                                   size=(1500, 120), background_color=(23 / 205.0, 180 / 200, 1.5, 0.3),
                                   font_name="arial.ttf")
+
 
                 indiv_op.bind(on_press=lambda indiv_op: self.dropdownlist.select(indiv_op.text))
                 self.dropdownlist.add_widget(indiv_op)
