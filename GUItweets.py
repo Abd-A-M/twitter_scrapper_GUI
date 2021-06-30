@@ -48,55 +48,57 @@ class MainWindow(Screen):
     links = []
 
     def search(self):
-        self.lan = detect(self.searchkey)
-        if not (self.searchkey).isspace() and self.searchkey != "" and self.lan != 'Arabic':
-            searchword = self.searchkey
-            public_tweets = api.search(q=searchword, count=1000)
-            if searchword != '':
-                for tweet in public_tweets:
-                    try:
-                        name = tweet.user.screen_name
-                        t_id = tweet.id
-                        full_link = "https://twitter.com/{}/status/{}".format(name, t_id)
-                        self.links.append(full_link)
-                    except Exception:
-                        self.links.append('www.twitter.com')
+        try:
+            self.lan = detect(self.searchkey)
+            if not (self.searchkey).isspace() and self.searchkey != "" and self.lan != 'Arabic':
+                searchword = self.searchkey
+                public_tweets = api.search(q=searchword, count=1000)
+                if searchword != '':
+                    for tweet in public_tweets:
+                        try:
+                            name = tweet.user.screen_name
+                            t_id = tweet.id
+                            full_link = "https://twitter.com/{}/status/{}".format(name, t_id)
+                            self.links.append(full_link)
+                        except Exception:
+                            self.links.append('www.twitter.com')
 
-                    analyzer = SentimentIntensityAnalyzer()
-                    sentiment = analyzer.polarity_scores(tweet.text)['compound']
-                    self.overallfeeling.append(sentiment)
-                    self.tweets.append(tweet.text)
-                    self.tweet_sen.append(self.sentimentformat(sentiment))
+                        analyzer = SentimentIntensityAnalyzer()
+                        sentiment = analyzer.polarity_scores(tweet.text)['compound']
+                        self.overallfeeling.append(sentiment)
+                        self.tweets.append(tweet.text)
+                        self.tweet_sen.append(self.sentimentformat(sentiment))
 
-                meanfeeling = numpy.mean(self.overallfeeling)
-                self.ids.label.text = "Overall sentiment:\n" + self.sentimentformat(meanfeeling)
-            return True
-        elif self.searchkey.isspace() != True and self.searchkey != "" and self.lan == 'Arabic':
-            reshaped_text = arabic_reshaper.reshape(self.searchkey)
-            searchword = reshaped_text
-            public_tweets = api.search(q=searchword, count=1000)
-            if searchword != '':
-                for tweet in public_tweets:
-                    try:
-                        name = tweet.user.screen_name
-                        t_id = tweet.id
-                        full_link = "https://twitter.com/{}/status/{}".format(name, t_id)
-                        self.links.append(full_link)
-                    except Exception:
-                        self.links.append('www.twitter.com')
+                    meanfeeling = numpy.mean(self.overallfeeling)
+                    self.ids.label.text = "Overall sentiment:\n" + self.sentimentformat(meanfeeling)
+                return True
+            elif self.searchkey.isspace() != True and self.searchkey != "" and self.lan == 'Arabic':
+                reshaped_text = arabic_reshaper.reshape(self.searchkey)
+                searchword = reshaped_text
+                public_tweets = api.search(q=searchword, count=1000)
+                if searchword != '':
+                    for tweet in public_tweets:
+                        try:
+                            name = tweet.user.screen_name
+                            t_id = tweet.id
+                            full_link = "https://twitter.com/{}/status/{}".format(name, t_id)
+                            self.links.append(full_link)
+                        except Exception:
+                            self.links.append('www.twitter.com')
 
-                    analyzer = SentimentIntensityAnalyzer()
-                    sentiment = analyzer.polarity_scores(tweet.text)['compound']
-                    self.overallfeeling.append(sentiment)
-                    self.tweets.append(tweet.text)
-                    self.tweet_sen.append(self.sentimentformat(sentiment))
+                        analyzer = SentimentIntensityAnalyzer()
+                        sentiment = analyzer.polarity_scores(tweet.text)['compound']
+                        self.overallfeeling.append(sentiment)
+                        self.tweets.append(tweet.text)
+                        self.tweet_sen.append(self.sentimentformat(sentiment))
 
-                meanfeeling = numpy.mean(self.overallfeeling)
-                self.ids.label.text = "Overall sentiment:\n" + self.sentimentformat(meanfeeling)
-            return True
-        else:
-            return False
-
+                    meanfeeling = numpy.mean(self.overallfeeling)
+                    self.ids.label.text = "Overall sentiment:\n" + self.sentimentformat(meanfeeling)
+                return True
+            else:
+                return False
+        except:
+            pass
     def sentimentformat(self, sentimentformat):
         sentiment = sentimentformat
         if sentiment > .5:
@@ -123,7 +125,7 @@ class MainWindow(Screen):
     def drop_menu(self):
         from kivy.uix.dropdown import DropDown
         if self.search() and self.lan != "Arabic":
-            self.dropdownlist = DropDown(size_hint=(None, None), size=(1500, 751), pos=(0, 0), auto_dismiss=False)
+            self.dropdownlist = DropDown(size_hint=(None, None), size=(1500, 751), pos=(0, 0))
             for item in self.tweets:
                 pos = self.tweets.index(item)
                 indiv_op = Button(text=item.replace("\n", " ") + "\n " + self.tweet_sen[pos] + "\n" + self.links[pos],
@@ -137,11 +139,11 @@ class MainWindow(Screen):
             self.tweet_sen = []
             self.searchkey = ""
             self.dropdownlist.bind(on_select=lambda instance, x: self.open_link(x))
-            self.dropdownlist.auto_dismiss = False
+
             runTouchApp(self.dropdownlist)
 
         if self.search() and self.lan == "Arabic":
-            self.dropdownlist = DropDown(size_hint=(None, None), size=(1500, 751), pos=(0, 0), auto_dismiss=False)
+            self.dropdownlist = DropDown(size_hint=(None, None), size=(1500, 751), pos=(0, 0))
             for item in self.tweets:
                 pos = self.tweets.index(item)
                 item = arabic_reshaper.reshape(item)
@@ -159,7 +161,7 @@ class MainWindow(Screen):
             self.tweet_sen = []
             self.searchkey = ""
             self.dropdownlist.bind(on_select=lambda instance, x: self.open_link(x))
-            self.dropdownlist.auto_dismiss=False
+
             runTouchApp(self.dropdownlist)
 
         else:
@@ -172,7 +174,7 @@ class MainWindow(Screen):
             layout.add_widget(closeButton)
             popup = Popup(title='Error !!',
                           content=layout,
-                          size_hint=(None, None), size=(600, 250), auto_dismiss=False)
+                          size_hint=(None, None), size=(600, 250))
             popup.open()
             closeButton.bind(on_press=popup.dismiss)
 
