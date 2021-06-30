@@ -1,3 +1,7 @@
+'''
+Author: Abdullah Melhem
+Email:pro.am532016@gmail.com
+'''
 import arabic_reshaper
 import bidi.algorithm
 import numpy
